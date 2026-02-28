@@ -1,25 +1,230 @@
+Жансерік, [28.02.2026 17:58]
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Photo Gallery</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Interactive Photo Gallery with Zoom</title>
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+/* Header */
+header{
+    background:#111827;
+    color:white;
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+}
+
+/* Gallery */
+.gallery{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin:20px;
+}
+.gallery figure{
+    margin:10px;
+    text-align:center;
+}
+.gallery img{
+    width:200px;
+    height:150px;
+    object-fit:cover;
+    border-radius:8px;
+    cursor:pointer;
+    transition: transform 0.2s;
+}
+.gallery img:hover{
+    transform: scale(1.05);
+}
+
+/* Display */
+#display{
+    text-align:center;
+    margin:10px;
+    font-weight:bold;
+}
+
+/* Lightbox */
+#lightbox{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+#lightbox img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+}
+
+/* Container */
+.container{
+    max-width:900px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Canvas */
+canvas{
+    display:block;
+    margin:20px auto;
+    border:2px solid #ddd;
+    border-radius:10px;
+    background:#fafafa;
+}
+
+/* Button */
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin:10px;
+}
+button:hover{
+    background:#1d4ed8;
+}
+
+footer{
+    text-align:center;
+    margin-top:40px;
+    color:#666;
+}
+</style>
 </head>
+<body onload="addTabIndex()">
 
-<body>
+<header>Janserik Web Project</header>
 
-    <div id="image">
-        Hover over an image below to display here.
-    </div>
+<h1 style="text-align:center;">My Interactive Photo Gallery</h1>
+<h2 style="text-align:center;">Gallery</h2>
 
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAew26FGR6z3xh5a1f67JazeG4EjivBmymow&s" alt="Mountain" onmouseover="upDate(this)" onmouseout="undo()">
+<div class="gallery">
+    <figure>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRto5dre6rVNiT-dIIfmcsX6tEqZzg9qLaWwQ&s" alt="Sunny beach with blue ocean">
+        <figcaption>Beach</figcaption>
+    </figure>
+    <figure>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdWyFda3SNU3_RWP3c-wlqH5BifHezuSvumQ&s" alt="City skyline at night">
+        <figcaption>City</figcaption>
+    </figure>
+    <figure>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREMQlj7MAzndkOpm8qhUaG_FDHYafqU1e3Pg&s" alt="Forest with sunlight">
+        <figcaption>Forest</figcaption>
+    </figure>
+    <figure>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlVLM7ZOtrDzpw0rpAgkRVpQ_vf3k2Q-Yreg&s" alt="Desert with sand dunes">
+        <figcaption>Desert</figcaption>
+    </figure>
+    <figure>
+        <img src="https://i.pinimg.com/236x/7e/b8/ae/7eb8ae9737ba1565aa949ece10742763.jpg" alt="BMW M5 Competition">
+        <figcaption>BMW M5 Competition</figcaption>
+    </figure>
+    <figure>
+        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=80" alt="Mountain landscape at sunset">
+        <figcaption>Mountain</figcaption>
+    </figure>
+</div>
 
+<div id="display">Hover over an image or focus using keyboard</div>
 
+<!-- Lightbox -->
+<div id="lightbox">
+    <img src="" alt="">
+</div>
 
-    <script src="script.js"></script>
+<h2 style="text-align:center;">Canvas Area</h2>
+<div class="container">
+<canvas id="canvas" width="600" height="350"></canvas>
+<div style="text-align:center;">
+<button onclick="clearCanvas()">Clear</button>
+</div>
+</div>
+
+<footer>Student Project • 2026</footer>
+
+<script>
+// Function to add tabindex automatically
+function addTabIndex(){
+    const figures = document.querySelectorAll('.gallery figure img');
+    for(let i=0;i<figures.length;i++){
+        figures[i].setAttribute('tabindex','0');
+        console.log("Tabindex added to image " + (i+1));
+    }
+}
+
+Жансерік, [28.02.2026 17:58]
+// Gallery functions
+function upDate(previewPic){
+    const display = document.getElementById("display");
+    display.style.backgroundImage = url('${previewPic.src}');
+    display.style.backgroundSize = "contain";
+    display.style.backgroundRepeat = "no-repeat";
+    display.style.backgroundPosition = "center";
+    display.textContent = previewPic.alt;
+}
+function undo(){
+    const display = document.getElementById("display");
+    display.style.backgroundImage = "";
+    display.textContent = "Hover over an image or focus using keyboard";
+}
+
+// Lightbox functionality
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+
+document.querySelectorAll('.gallery img').forEach(img=>{
+    img.addEventListener('mouseover', ()=>upDate(img));
+    img.addEventListener('mouseleave', ()=>undo());
+    img.addEventListener('focus', ()=>upDate(img));
+    img.addEventListener('blur', ()=>undo());
+    img.addEventListener('click', ()=>{
+        lightbox.style.display='flex';
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+    });
+});
+
+lightbox.addEventListener('click', ()=> lightbox.style.display='none');
+document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') lightbox.style.display='none';
+});
+
+// Canvas drawing
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+let drawing=false;
+canvas.addEventListener("mousedown", ()=>drawing=true);
+canvas.addEventListener("mouseup", ()=>{drawing=false; ctx.beginPath();});
+canvas.addEventListener("mousemove", draw);
+function draw(e){
+    if(!drawing) return;
+    ctx.lineWidth=3;
+    ctx.lineCap="round";
+    ctx.strokeStyle="#ef4444";
+    ctx.lineTo(e.offsetX,e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX,e.offsetY);
+}
+function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height);}
+</script>
 
 </body>
-
-</html>
-
 </html>
